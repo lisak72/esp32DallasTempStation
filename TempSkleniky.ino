@@ -51,11 +51,13 @@ const float maximalTempValue=80;
 const bool Sensor1=1;
 DeviceAddress internal1Adr=Adr3;
 const String Sensor1Place="Temp in room: ";
+const float calibration1=0.0;
 //</SENSOR1>
 //<SENSOR2>
 const bool Sensor2=1;
 DeviceAddress external2Adr=Adr1;
 const String Sensor2Place="Temp in deepfreezer (red detector): ";
+const float calibration2=0.0;
 //</SENSOR2>
 //<SENSOR3>
 const bool Sensor3=1;
@@ -264,6 +266,7 @@ void loop(){
   }
   else digitalWrite(LED, HIGH);
   t1=readTempAddr(internal1Adr);
+  t1+=calibration1;
   tempWeb="<h1> \n"+NTP.getTimeDateString()+" Signal: "+WiFi.RSSI()+"    Dev: "+deviceName;
   delay(sensorDelay);
   if(Sensor1){
@@ -274,6 +277,7 @@ void loop(){
  if(Sensor2){
     delay(sensorDelay);
     t2=readTempAddr(external2Adr);
+    t2+=calibration2;
     tempWeb+="\n <br>"+Sensor2Place;
     tempWeb+="     ";
     tempWeb+=String(t2,2)+" &deg;C";
@@ -281,7 +285,7 @@ void loop(){
  if(Sensor3){
     delay(sensorDelay);
     t3=readTempAddr(external3Adr);
-    t3-=calibration3;
+    t3+=calibration3;
     tempWeb+="\n <br>"+Sensor3Place;
     tempWeb+="     ";
     tempWeb+=String(t3,2)+" &deg;C"; 
@@ -289,7 +293,7 @@ void loop(){
  if(Sensor4){
     delay(sensorDelay);
     t4=readTempAddr(external4Adr);
-    t4-=calibration4;
+    t4+=calibration4;
     tempWeb+="\n <br>"+Sensor4Place;
     tempWeb+="     ";
     tempWeb+=String(t4,2)+" &deg;C"; 
