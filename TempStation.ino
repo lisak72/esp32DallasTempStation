@@ -25,7 +25,7 @@
 #include <NtpClientLib.h> //Include NtpClient library header  https://github.com/gmag11/NtpClient
 #include <HTTPClient.h>
 
-#include "TempSkleniky.h"
+#include "TempStation.h"
 #include "passwords.h"
 
 //<SETUP>
@@ -252,10 +252,9 @@ if(WebServer1On){
 }
 */
 
-} //end of setup part
+} //end of setup 
 
  
-//String temp01, temp02; 
 void loop(){
   tempWebFin="not connected";
   if(CLIENT && WiFi.status()!= WL_CONNECTED) {
