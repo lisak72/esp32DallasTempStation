@@ -1,0 +1,55 @@
+#include "mgos.h"
+#include "mgos_http_server.h"
+
+// Handler pro GET /hello
+static void hello_handler(struct mg_connection *nc, int ev, void *p, void *user_data) {
+  if (ev != MG_EV_HTTP_REQUEST) return;
+
+  mg_http_reply(nc, 200, "Content-Type: text/plain\r\n", "Ahoj z ESP32 HTTP serveru!\n");
+  (void) user_data;
+  (void) p;
+}
+
+// Handler pro POST /echo
+static void echo_handler(struct mg_connection *nc, int ev, void *p, void *user_data) {
+  if (ev != MG_EV_HTTP_REQUEST) return;
+
+  struct mg_http_message *hm = (struct mg_http_message *) p;
+  mg_http_reply(nc, 200, "Content-Type: text/plain\r\n", "%.*s\n",
+                (int) hm->body.len, hm->body.ptr);
+  (void) user_data;
+}
+
+// Inicializační funkce Mongoose OS
+enum mgos_app_init_result mgos_app_init(void) {
+  // Registrace HTTP endpointů
+  mgos_register_http_endpoint("/hello", hello_handler, NULL);
+  mgos_register_http_endpoint("/echo", echo_handler, NULL);
+
+  LOG(LL_INFO, ("HTTP server běží – endpointy /hello a /echo"));
+  return MGOS_APP_INIT_SUCCESS;
+}
+
+⚙️ Soubor mos.yml
+
+author: "Jiri Liska"
+description: "HTTP server pro ESP32 v C (Mongoose OS)"
+version: "1.0"
+libs_version: latest
+modules_version: latest
+mongoose_os_version: latest
+
+arch: esp32
+
+# Přidáme knihovnu HTTP serveru
+libs:
+  - origin: https://github.com/mongoose-os-libs/http-server
+
+config_schema:
+  - ["http.enable", true]
+  - ["http.listen_addr", "tcp://0.0.0.0:80"]
+
+tags:
+  - c
+  - esp32
+  - http
